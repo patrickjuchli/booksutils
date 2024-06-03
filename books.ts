@@ -1,8 +1,7 @@
+#!/usr/bin/env -S deno run --allow-read --allow-env --allow-ffi --unstable-ffi
+
 /**
  * CLI to access data of the local Apple Books application.
- * 
- * deno run  -A --unstable-ffi books.ts list [partialTitle]
- * deno run  -A --unstable-ffi books.ts highlights [bookId]
  */
 
 import { getBooks, getBookHighlights } from "./lib/AppleBooks.ts";
