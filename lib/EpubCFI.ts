@@ -8,7 +8,7 @@
 import { assertEquals } from "https://deno.land/std@0.224.0/assert/mod.ts";
 
 const PADDING_SIZE = 6
-const REGEX_SQUARE_BRACKET_EXPR = /\[.*\]!?/g
+const REGEX_CFI_TAG_EXPR = /\[.*\]!?/g
 
 /**
  * Converts a CFI start location to a string that can be used to quickly compare/sort locations. Accepts either `epubcfi(location)` or
@@ -18,8 +18,8 @@ const REGEX_SQUARE_BRACKET_EXPR = /\[.*\]!?/g
  * Treat this as an opaque value, use it only for comparing it to other locations, it's not meant to be parsed for other use.
  */
 export function cfiGetSortableStartLocation(cfi: string): string {
-    const numerical = cfi.replaceAll(REGEX_SQUARE_BRACKET_EXPR, "") // Strip tags
-    const parts = numerical.split(",") // See https://idpf.org/epub/linking/cfi/#sec-ranges
+    const strippedTags = cfi.replaceAll(REGEX_CFI_TAG_EXPR, "")
+    const parts = strippedTags.split(",") // See https://idpf.org/epub/linking/cfi/#sec-ranges
     const parentAndStart = parts[0] + (parts[1] ?? "") 
     const matches = parentAndStart.match(/\d+/g)
     if (matches === null) {
