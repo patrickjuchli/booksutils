@@ -2,7 +2,6 @@
  * EPUB Canonical Fragment Identifiers
  * 
  * Spec: https://idpf.org/epub/linking/cfi/
- *
  */
 
 import { assertEquals } from "https://deno.land/std@0.224.0/assert/mod.ts";
@@ -21,14 +20,14 @@ export function cfiGetSortableStartLocation(cfi: string): string {
     const strippedTags = cfi.replaceAll(REGEX_CFI_TAG_EXPR, "")
     const parts = strippedTags.split(",") // See https://idpf.org/epub/linking/cfi/#sec-ranges
     const parentAndStart = parts[0] + (parts[1] ?? "") 
-    const matches = parentAndStart.match(/\d+/g)
-    if (matches === null) {
+    const numbers = parentAndStart.match(/\d+/g)
+    if (numbers === null) {
         return ""
     }
     // Padding each value in a CFI range start location will make the resulting strings comparable/sortable even if 
     // locations have varying numbers of elements. It's assumed that a padding of PADDING_SIZE "oughta be enough for everyone". 
     // This assumption might break.
-    return matches.map(m => m.padStart(PADDING_SIZE, "0")).join("")
+    return numbers.map(n => n.padStart(PADDING_SIZE, "0")).join("")
 }
 
 Deno.test("cfiGetSortableStartLocation parent+start+end", () => {

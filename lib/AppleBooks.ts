@@ -38,7 +38,7 @@ export interface BookHighlight {
     text: string
     epubcfi: string
     comparableStartLoc: string
-    note?: string
+    note: string | undefined
 }
 
 /**
@@ -74,10 +74,10 @@ function sortHighlights(a: BookHighlight, b: BookHighlight): number {
  * Return the first SQLite database file path in a given directory.
  */
 function getSqlitePath(dirPath: string): string {
-    const entries = [...Deno.readDirSync(dirPath)]
-    const dbs = entries.filter(e => e.isFile && e.name.endsWith(".sqlite"))
-    if (dbs.length === 0) {
-        throw new Error(`No sqlite database found at ${dirPath}`)
+    for (const e of Deno.readDirSync(dirPath)) {
+        if (e.isFile && e.name.endsWith(".sqlite")) {
+            return `${dirPath}/${e.name}`
+        }
     }
-    return `${dirPath}/${dbs[0].name}`
+    throw new Error(`No sqlite database found at ${dirPath}`)
 }

@@ -5,8 +5,9 @@
  */
 
 import { getBooks, getBookHighlights } from "./lib/AppleBooks.ts";
+import { cliCommands } from "./lib/CLI.ts";
 
-const cli = {
+cliCommands({
     list: (partialTitle: string = "") => {
         const books = getBooks(partialTitle)
         console.table(books)
@@ -20,13 +21,4 @@ const cli = {
         const markdown = markdownParts.join("\n\n")
         console.log(markdown)
     }
-}
-
-const action: string = Deno.args[0];
-// deno-lint-ignore no-explicit-any
-const func = (cli as Record<string, any>)[action];
-if (func) {
-    func(...Deno.args.slice(1))
-} else {
-    console.log(`Unknown command '${action}'. Available commands: ${Object.keys(cli).join(", ")}`)
-}
+})
