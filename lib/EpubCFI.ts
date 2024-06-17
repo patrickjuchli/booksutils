@@ -49,20 +49,35 @@ Deno.test("cfiGetSortableStartLocation just location, no range", () => {
     assertEquals(actual, expected)
 });
 
-Deno.test("Strip CFI tag expressions", () => {
+Deno.test("Matching CFI tag expressions", () => {
     interface Test {
+        info: string
         input: string
         expected: string
     }
     const tests: Test[] = [{
-        input: "epubcfi(/6/14[chap05ref]!/4[body01]/10/2/)",
-        expected: "epubcfi(/6/14/4/10/2/)"
+        info: "No tags",
+        input: "epubcfi(/6/14/4/10/2, :2, :5)",
+        expected: "epubcfi(/6/14/4/10/2, :2, :5)"
     }, {
+        info: "Simple tag",
+        input: "epubcfi(/6/24[ch011_xhtml]/4/320/3,:571,:651)",    
+        expected: "epubcfi(/6/24/4/320/3,:571,:651)"        
+    }, {
+        info: "Trailing exclamation mark",
+        input: "epubcfi(/6/24[ch011_xhtml]!/4/320/3,:571,:651)",
+        expected: "epubcfi(/6/24/4/320/3,:571,:651)"
+    }, {
+        info: "Multiple tags",
+        input: "epubcfi(/6/14[chap05ref]!/4[body01]/10/2)",
+        expected: "epubcfi(/6/14/4/10/2)"
+    }, {
+        info: "Nested tags",
         input: "epubcfi(/6/14[chap05ref]!/4[body01]/10/2/1:3[2^[1^]])",
         expected: "epubcfi(/6/14/4/10/2/1:3)"
     }]
     for (const test of tests) {
         const actual = test.input.replaceAll(REGEX_CFI_TAG_EXPR, "")
-        assertEquals(actual, test.expected, test.input)
+        assertEquals(actual, test.expected, test.info)
     }
 })
