@@ -48,3 +48,21 @@ Deno.test("cfiGetSortableStartLocation just location, no range", () => {
     const actual = cfiGetSortableStartLocation("epubcfi(/6/24[ch011_xhtml]!/4/320/3:571")
     assertEquals(actual, expected)
 });
+
+Deno.test("Strip CFI tag expressions", () => {
+    interface Test {
+        input: string
+        expected: string
+    }
+    const tests: Test[] = [{
+        input: "epubcfi(/6/14[chap05ref]!/4[body01]/10/2/)",
+        expected: "epubcfi(/6/14/4/10/2/)"
+    }, {
+        input: "epubcfi(/6/14[chap05ref]!/4[body01]/10/2/1:3[2^[1^]])",
+        expected: "epubcfi(/6/14/4/10/2/1:3)"
+    }]
+    for (const test of tests) {
+        const actual = test.input.replaceAll(REGEX_CFI_TAG_EXPR, "")
+        assertEquals(actual, test.expected, test.input)
+    }
+})
