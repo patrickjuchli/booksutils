@@ -6,13 +6,6 @@
 
 import { assertEquals } from "https://deno.land/std@0.224.0/assert/mod.ts";
 
-/**
- * Match tag expressions in square brackets including trailing exclamation mark. 
- * Some examples:
- * 
- * epubcfi(/6/14[chap05ref]!/4[body01]/10/2/)
- * epubcfi(/6/14[chap05ref]!/4[body01]/10/2/1:3[2^[1^]])
- */
 const REGEX_CFI_TAG_EXPR = /\[(\w|\^|\[)*\]+!?/g
 const PADDING_SIZE = 6
 
