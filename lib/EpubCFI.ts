@@ -42,7 +42,7 @@ Deno.test("cfiGetSortableStartLocation just location, no range", () => {
     assertEquals(actual, expected)
 });
 
-Deno.test("Matching CFI tag expressions", () => {
+Deno.test("Matching CFI tag expressions", async (t) => {
     interface Test {
         info: string
         input: string
@@ -70,7 +70,9 @@ Deno.test("Matching CFI tag expressions", () => {
         expected: "epubcfi(/6/14/4/10/2/1:3)"
     }]
     for (const test of tests) {
-        const actual = test.input.replaceAll(REGEX_CFI_TAG_EXPR, "")
-        assertEquals(actual, test.expected, test.info)
+        await t.step(test.info, () => {
+            const actual = test.input.replaceAll(REGEX_CFI_TAG_EXPR, "")
+            assertEquals(actual, test.expected)
+        })
     }
 })
