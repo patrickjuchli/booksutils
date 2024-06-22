@@ -54,17 +54,15 @@ export function getBookHighlights(bookId: string): BookHighlight[] {
       AND ZANNOTATIONSELECTEDTEXT IS NOT NULL 
       AND ZANNOTATIONDELETED=0`
     db.close()
-    const highlights: BookHighlight[] = results.map(r => ({
+    return results.map(r => ({
         text: r.ZANNOTATIONSELECTEDTEXT,
         epubcfi: r.ZANNOTATIONLOCATION,
         comparableStartLoc: cfiGetSortableStartLocation(r.ZANNOTATIONLOCATION),
         note: r.ZZANNOTATIONNOTE ?? undefined
-    }))
-    highlights.sort(sortHighlights)
-    return highlights
+    })).toSorted(compareHighlightStartLoc)
 }
 
-function sortHighlights(a: BookHighlight, b: BookHighlight): number {
+function compareHighlightStartLoc(a: BookHighlight, b: BookHighlight): number {
     if (a.comparableStartLoc < b.comparableStartLoc) return -1
     if (a.comparableStartLoc > b.comparableStartLoc) return 1
     return 0 
