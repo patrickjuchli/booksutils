@@ -19,7 +19,7 @@ export interface Book {
  * Get all books in the library.
  */
 export function getBooks(partialTitle: string = ""): Book[] {
-    const dbPath = getSqlitePath(PATH_DIR_LIBRARY)
+    const dbPath = getFirstSqliteInDirectory(PATH_DIR_LIBRARY)
     const db = new Database(dbPath, { readonly: true });
     const titleFilter = `%${partialTitle}%`
     const results = db.sql`
@@ -45,7 +45,7 @@ export interface BookHighlight {
  * Get all highlights of a book sorted by occurrence.
  */
 export function getBookHighlights(bookId: string): BookHighlight[] {
-    const dbPath = getSqlitePath(PATH_DIR_ANNOTATIONS)
+    const dbPath = getFirstSqliteInDirectory(PATH_DIR_ANNOTATIONS)
     const db = new Database(dbPath, { readonly: true });
     const results = db.sql`
     SELECT ZANNOTATIONSELECTEDTEXT, ZANNOTATIONNOTE, ZANNOTATIONLOCATION 
@@ -68,10 +68,7 @@ function compareHighlightStartLoc(a: BookHighlight, b: BookHighlight): number {
     return 0 
 }
 
-/**
- * Return the first SQLite database file path in a given directory.
- */
-function getSqlitePath(dirPath: string): string {
+function getFirstSqliteInDirectory(dirPath: string): string {
     for (const e of Deno.readDirSync(dirPath)) {
         if (e.isFile && e.name.endsWith(".sqlite")) {
             return `${dirPath}/${e.name}`
