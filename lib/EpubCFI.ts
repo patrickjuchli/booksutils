@@ -16,7 +16,7 @@ const PADDING_SIZE = 6
  * For example, from `epubcfi(/6/24[ch011_xhtml]!/4/320/3,:571,:651)` you'll get something like `000006000024000004000320000003000571`. 
  * Treat this as an opaque value, use it only for comparing it to other locations, it's not meant to be parsed for other use.
  */
-export function cfiGetSortableStartLocation(cfi: string): string {
+export function cfiGetComparableStartLocation(cfi: string): string {
     const strippedTags = cfi.replaceAll(REGEX_CFI_TAG_EXPR, "")
     const parts = strippedTags.split(",") // See https://idpf.org/epub/linking/cfi/#sec-ranges
     const parentAndStart = parts[0] + (parts[1] ?? "") 
@@ -30,15 +30,15 @@ export function cfiGetSortableStartLocation(cfi: string): string {
     return numbers.map(n => n.padStart(PADDING_SIZE, "0")).join("")
 }
 
-Deno.test("cfiGetSortableStartLocation parent+start+end", () => {
+Deno.test("cfiGetComparableStartLocation parent+start+end", () => {
     const expected = "000006000024000004000320000003000571"
-    const actual = cfiGetSortableStartLocation("epubcfi(/6/24[ch011_xhtml]!/4/320/3,:571,:651)")
+    const actual = cfiGetComparableStartLocation("epubcfi(/6/24[ch011_xhtml]!/4/320/3,:571,:651)")
     assertEquals(actual, expected)
 });
 
-Deno.test("cfiGetSortableStartLocation just location, no range", () => {
+Deno.test("cfiGetComparableStartLocation just location, no range", () => {
     const expected = "000006000024000004000320000003000571"
-    const actual = cfiGetSortableStartLocation("epubcfi(/6/24[ch011_xhtml]!/4/320/3:571")
+    const actual = cfiGetComparableStartLocation("epubcfi(/6/24[ch011_xhtml]!/4/320/3:571")
     assertEquals(actual, expected)
 });
 

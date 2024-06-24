@@ -3,7 +3,7 @@
  */
 
 import { Database } from "jsr:@db/sqlite@0.11";
-import { cfiGetSortableStartLocation } from "./EpubCFI.ts"
+import { cfiGetComparableStartLocation } from "./EpubCFI.ts"
 
 const PATH_DIR_HOME = Deno.env.get("HOME")
 const PATH_DIR_LIBRARY = `${PATH_DIR_HOME}/Library/Containers/com.apple.iBooksX/Data/Documents/BKLibrary`
@@ -57,7 +57,7 @@ export function getBookHighlights(bookId: string): BookHighlight[] {
     return results.map(r => ({
         text: r.ZANNOTATIONSELECTEDTEXT,
         epubcfi: r.ZANNOTATIONLOCATION,
-        comparableStartLoc: cfiGetSortableStartLocation(r.ZANNOTATIONLOCATION),
+        comparableStartLoc: cfiGetComparableStartLocation(r.ZANNOTATIONLOCATION),
         note: r.ZZANNOTATIONNOTE ?? undefined
     })).toSorted(compareHighlightStartLoc)
 }
